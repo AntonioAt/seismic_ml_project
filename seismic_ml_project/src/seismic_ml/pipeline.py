@@ -242,7 +242,7 @@ class _StageTimer:
     def __enter__(self) -> "_StageTimer":
         print(f"\n{'─' * 60}")
         print(f"  ▶  STAGE : {self.name}")
-        print(f"{'─' * 60}")
+        print("-" * 60)
         self._t0 = time.perf_counter()
         return self
 
