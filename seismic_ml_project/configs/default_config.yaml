@@ -1,0 +1,68 @@
+# configs/default_config.yaml
+# ============================================================
+# Default configuration for the Seismic ML Pipeline
+# ============================================================
+
+project:
+  name: "seismic_ml_project"
+  version: "0.2.0"
+
+data:
+  inline_byte: 189
+  crossline_byte: 193
+  sample_rate_ms: 2.0
+  inline_spacing_m: 25.0
+  crossline_spacing_m: 25.0
+  chunk_size: 50
+
+preprocessing:
+  bandpass_low_hz: 5.0
+  bandpass_high_hz: 120.0
+  smooth_sigma: 0.8
+  noise_attenuation: true
+  amplitude_scaling: false
+
+model:
+  architecture: "unet3d"       # "unet3d" | "transformer" (priority #2)
+  in_channels: 1
+  n_classes: 3
+  base_features: 32
+  depth: 4
+  patch_size: [64, 64, 64]
+
+training:
+  n_epochs: 50
+  batch_size: 4
+  learning_rate: 0.001
+  grad_clip: 1.0
+  num_workers: 4
+  n_patches: 2000
+  checkpoint_dir: "./checkpoints"
+  use_amp: true
+
+inference:
+  overlap: 0.5
+  batch_size: 2
+  min_confidence: 0.6
+
+reservoir:
+  horizon_class: 0
+  min_zone_voxels: 200
+  min_dhi_score: 0.30
+  dhi_weights:
+    weight_amplitude: 0.30
+    weight_avo: 0.30
+    weight_flat_spot: 0.25
+    weight_trap: 0.15
+
+risk:                          # Priority #3 — populated when module is ready
+  min_confidence: 0.6
+  fault_hazard_radius: 10
+  levels: ["Low", "Medium", "High", "Critical"]
+
+visualization:
+  output_dir_static: "./seismic_viz"
+  output_dir_interactive: "./seismic_viz_interactive"
+  dpi: 150
+  fmt: "png"
+  min_confidence_3d: 0.4
